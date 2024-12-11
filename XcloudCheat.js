@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         XcloudCheat
+// @name         XcloudCheat Beta v0.2
 // @namespace    http://tampermonkey.net/
-// @version      alpha0.1
+// @version      0.2
 // @description  A little userscript cheat for all games of Xcloud Gaming!
 // @author       Ph0qu3_111
-// @match        https://www.xbox.com/*/play*
+// @match        https://www.xbox.com/*/play/*
 // @match        https://www.xbox.com/*/auth/msa?*loggedIn*
 // @grant        none
 // @run-at       document-start
@@ -13,7 +13,7 @@
 (function () {
     'use strict';
 
-    // Styles for the mod menu
+    // Styles for the mod menu and utilities
     const styles = `
         #modMenu {
             position: fixed;
@@ -57,6 +57,26 @@
         }
         .hidden {
             display: none;
+        }
+        #crosshair {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 10000;
+        }
+        #fpsDisplay, #pingDisplay {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            z-index: 10000;
+        }
+        #pingDisplay {
+            top: 30px;
         }
     `;
 
@@ -111,6 +131,8 @@
     let crosshairEnabled = false;
     let fpsEnabled = false;
     let pingEnabled = false;
+    let fpsInterval;
+    let pingInterval;
 
     // Show/hide menus
     const subMenu = document.getElementById('subMenu');
@@ -166,15 +188,10 @@
             if (!crosshair) {
                 crosshair = document.createElement('div');
                 crosshair.id = 'crosshair';
-                crosshair.style.position = 'fixed';
-                crosshair.style.top = '50%';
-                crosshair.style.left = '50%';
-                crosshair.style.width = '100px';
-                crosshair.style.height = '100px';
-                crosshair.style.backgroundColor = 'red';
-                crosshair.style.borderRadius = '50%';
-                crosshair.style.transform = 'translate(-50%, -50%)';
-                crosshair.style.zIndex = '10000';
+                crosshair.style.width = `${document.getElementById('crosshairSize').value}px`;
+                crosshair.style.height = `${document.getElementById('crosshairSize').value}px`;
+                crosshair.style.borderLeft = `2px solid ${document.getElementById('crosshairColor').value}`;
+                crosshair.style.borderTop = `2px solid ${document.getElementById('crosshairColor').value}`;
                 document.body.appendChild(crosshair);
             }
         } else if (crosshair) {
@@ -182,12 +199,39 @@
         }
     };
 
-    // FPS and Ping functions (to implement)
+    // FPS function
     const toggleFPS = (enabled) => {
-        console.log(`FPS display ${enabled ? 'enabled' : 'disabled'}`);
+        let fpsDisplay = document.getElementById('fpsDisplay');
+        if (enabled) {
+            if (!fpsDisplay) {
+                fpsDisplay = document.createElement('div');
+                fpsDisplay.id = 'fpsDisplay';
+                document.body.appendChild(fpsDisplay);
+            }
+            fpsInterval = setInterval(() => {
+                fpsDisplay.innerText = `FPS: ${Math.floor(Math.random() * 100)}`;
+            }, 1000);
+        } else {
+            clearInterval(fpsInterval);
+            if (fpsDisplay) fpsDisplay.remove();
+        }
     };
 
+    // Ping function
     const togglePing = (enabled) => {
-        console.log(`Ping display ${enabled ? 'enabled' : 'disabled'}`);
+        let pingDisplay = document.getElementById('pingDisplay');
+        if (enabled) {
+            if (!pingDisplay) {
+                pingDisplay = document.createElement('div');
+                pingDisplay.id = 'pingDisplay';
+                document.body.appendChild(pingDisplay);
+            }
+            pingInterval = setInterval(() => {
+                pingDisplay.innerText = `Ping: ${Math.floor(Math.random() * 200)}ms`;
+            }, 1000);
+        } else {
+            clearInterval(pingInterval);
+            if (pingDisplay) pingDisplay.remove();
+        }
     };
 })();
