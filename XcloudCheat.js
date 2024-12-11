@@ -62,9 +62,26 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
             pointer-events: none;
             z-index: 10000;
+        }
+        #crosshair .horizontal, #crosshair .vertical {
+            position: absolute;
+            background-color: red;
+        }
+        #crosshair .horizontal {
+            width: 100px;
+            height: 2px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #crosshair .vertical {
+            width: 2px;
+            height: 100px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
         #fpsDisplay, #pingDisplay {
             position: fixed;
@@ -109,7 +126,6 @@
                     <option value="white">White</option>
                     <option value="blue">Blue</option>
                     <option value="green">Green</option>
-                    <option value="rgb">RGB</option>
                 </select><br>
                 <label for="crosshairSize">Crosshair Size:</label>
                 <select id="crosshairSize">
@@ -188,12 +204,25 @@
             if (!crosshair) {
                 crosshair = document.createElement('div');
                 crosshair.id = 'crosshair';
-                crosshair.style.width = `${document.getElementById('crosshairSize').value}px`;
-                crosshair.style.height = `${document.getElementById('crosshairSize').value}px`;
-                crosshair.style.borderLeft = `2px solid ${document.getElementById('crosshairColor').value}`;
-                crosshair.style.borderTop = `2px solid ${document.getElementById('crosshairColor').value}`;
+
+                // Create horizontal and vertical lines
+                const horizontal = document.createElement('div');
+                horizontal.className = 'horizontal';
+                const vertical = document.createElement('div');
+                vertical.className = 'vertical';
+
+                // Add to crosshair
+                crosshair.appendChild(horizontal);
+                crosshair.appendChild(vertical);
                 document.body.appendChild(crosshair);
             }
+            // Update crosshair styles
+            const color = document.getElementById('crosshairColor').value;
+            const size = document.getElementById('crosshairSize').value;
+            crosshair.querySelector('.horizontal').style.backgroundColor = color;
+            crosshair.querySelector('.horizontal').style.width = `${size}px`;
+            crosshair.querySelector('.vertical').style.backgroundColor = color;
+            crosshair.querySelector('.vertical').style.height = `${size}px`;
         } else if (crosshair) {
             crosshair.remove();
         }
