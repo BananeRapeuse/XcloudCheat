@@ -4,7 +4,7 @@
 // @version      0.2
 // @description  A little userscript cheat for all games of Xcloud Gaming!
 // @author       Ph0qu3_111
-// @match        https://www.xbox.com/*/play/*
+// @match        https://www.xbox.com/*/play*
 // @match        https://www.xbox.com/*/auth/msa?*loggedIn*
 // @grant        none
 // @run-at       document-start
