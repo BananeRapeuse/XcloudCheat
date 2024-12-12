@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         XcloudCheat
 // @namespace    http://tampermonkey.net/
-// @version      alpha0.1
+// @version      1.0
 // @description  A little userscript cheat for all games of Xcloud Gaming!
 // @author       Ph0qu3_111
 // @match        https://www.xbox.com/*/play*
