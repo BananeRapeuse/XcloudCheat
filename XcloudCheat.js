@@ -58,31 +58,6 @@
         .hidden {
             display: none;
         }
-        #crosshair {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            pointer-events: none;
-            z-index: 10000;
-        }
-        #crosshair .horizontal, #crosshair .vertical {
-            position: absolute;
-            background-color: red;
-        }
-        #crosshair .horizontal {
-            width: 100px;
-            height: 2px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        #crosshair .vertical {
-            width: 2px;
-            height: 100px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
         #fpsDisplay, #pingDisplay {
             position: fixed;
             top: 10px;
@@ -202,31 +177,49 @@
         let crosshair = document.getElementById('crosshair');
         if (enabled) {
             if (!crosshair) {
-                crosshair = document.createElement('div');
+                crosshair = document.createElement('img');
                 crosshair.id = 'crosshair';
-
-                // Create horizontal and vertical lines
-                const horizontal = document.createElement('div');
-                horizontal.className = 'horizontal';
-                const vertical = document.createElement('div');
-                vertical.className = 'vertical';
-
-                // Add to crosshair
-                crosshair.appendChild(horizontal);
-                crosshair.appendChild(vertical);
+                crosshair.style.position = 'fixed';
+                crosshair.style.top = '50%';
+                crosshair.style.left = '50%';
+                crosshair.style.pointerEvents = 'none';
+                crosshair.style.transform = 'translate(-50%, -50%)';
+                crosshair.style.zIndex = '10000';
                 document.body.appendChild(crosshair);
             }
-            // Update crosshair styles
-            const color = document.getElementById('crosshairColor').value;
-            const size = document.getElementById('crosshairSize').value;
-            crosshair.querySelector('.horizontal').style.backgroundColor = color;
-            crosshair.querySelector('.horizontal').style.width = `${size}px`;
-            crosshair.querySelector('.vertical').style.backgroundColor = color;
-            crosshair.querySelector('.vertical').style.height = `${size}px`;
+            updateCrosshair();
         } else if (crosshair) {
             crosshair.remove();
         }
     };
+
+    const updateCrosshair = () => {
+        const crosshair = document.getElementById('crosshair');
+        if (crosshair) {
+            const color = document.getElementById('crosshairColor').value;
+            const size = document.getElementById('crosshairSize').value;
+
+            const crosshairImages = {
+                red: 'https://raw.githubusercontent.com/BananeRapeuse/XcloudCheat/refs/heads/main/crosshairs/red.png',
+                black: 'https://raw.githubusercontent.com/BananeRapeuse/XcloudCheat/refs/heads/main/crosshairs/black.png',
+                white: 'https://raw.githubusercontent.com/BananeRapeuse/XcloudCheat/refs/heads/main/crosshairs/white.png',
+                blue: 'https://github.com/BananeRapeuse/XcloudCheat/raw/refs/heads/main/crosshairs/blue.png',
+                green: 'https://github.com/BananeRapeuse/XcloudCheat/raw/refs/heads/main/crosshairs/green.png'
+            };
+
+            crosshair.src = crosshairImages[color];
+
+            const baseSize = parseInt(size, 10);
+            const scaleFactor = window.innerWidth / 1920;
+            const adjustedSize = baseSize * scaleFactor;
+
+            crosshair.style.width = `${adjustedSize}px`;
+            crosshair.style.height = `${adjustedSize}px`;
+        }
+    };
+
+    document.getElementById('crosshairColor').onchange = updateCrosshair;
+    document.getElementById('crosshairSize').onchange = updateCrosshair;
 
     // FPS function
     const toggleFPS = (enabled) => {
