@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         XcloudCheat
 // @namespace    http://tampermonkey.net/
-// @version      alpha0.1
+// @version      1.0
 // @description  A little userscript cheat for all games of Xcloud Gaming!
 // @author       Ph0qu3_111
 // @match        https://www.xbox.com/*/play*
@@ -27,6 +27,25 @@
             border-radius: 8px;
             z-index: 10000;
             width: 200px;
+        }
+        #modMenu.hidden {
+            display: none;
+        }
+        #toggleMenuButton {
+            position: fixed;
+            top: 10px;
+            right: 220px;
+            background: #444;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 10001;
+        }
+        #toggleMenuButton:hover {
+            background: #555;
         }
         #modMenu h2 {
             margin: 0;
@@ -117,6 +136,18 @@
         </div>
     `;
     document.body.appendChild(modMenu);
+
+    // Add a toggle button to show/hide the menu
+    const toggleButton = document.createElement('div');
+    toggleButton.id = 'toggleMenuButton';
+    toggleButton.innerText = '−';
+    document.body.appendChild(toggleButton);
+
+    // Toggle menu visibility
+    toggleButton.onclick = () => {
+        const isHidden = modMenu.classList.toggle('hidden');
+        toggleButton.innerText = isHidden ? '+' : '−';
+    };
 
     // Variables for utilities
     let crosshairEnabled = false;
