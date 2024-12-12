@@ -15,18 +15,37 @@
 
     // Styles for the mod menu and utilities
     const styles = `
-        #modMenu {
+        #modMenuContainer {
             position: fixed;
             top: 10px;
             right: 10px;
+            z-index: 10000;
+        }
+        #toggleButton {
+            position: absolute;
+            top: 0;
+            right: -35px;
+            width: 30px;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            text-align: center;
+            line-height: 30px;
+        }
+        #modMenu {
             background: rgba(0, 0, 0, 0.8);
             color: white;
             font-family: Arial, sans-serif;
             font-size: 14px;
             padding: 10px;
             border-radius: 8px;
-            z-index: 10000;
             width: 200px;
+            display: block;
         }
         #modMenu h2 {
             margin: 0;
@@ -78,6 +97,16 @@
     styleSheet.innerText = styles;
     document.head.appendChild(styleSheet);
 
+    // Create container for mod menu and toggle button
+    const modMenuContainer = document.createElement('div');
+    modMenuContainer.id = 'modMenuContainer';
+
+    // Create toggle button
+    const toggleButton = document.createElement('button');
+    toggleButton.id = 'toggleButton';
+    toggleButton.innerText = '-';
+    modMenuContainer.appendChild(toggleButton);
+
     // Create the mod menu
     const modMenu = document.createElement('div');
     modMenu.id = 'modMenu';
@@ -116,7 +145,15 @@
             <button id="backButton">Back</button>
         </div>
     `;
-    document.body.appendChild(modMenu);
+    modMenuContainer.appendChild(modMenu);
+    document.body.appendChild(modMenuContainer);
+
+    // Toggle menu visibility
+    toggleButton.onclick = () => {
+        const isMenuVisible = modMenu.style.display !== 'none';
+        modMenu.style.display = isMenuVisible ? 'none' : 'block';
+        toggleButton.innerText = isMenuVisible ? '+' : '-';
+    };
 
     // Variables for utilities
     let crosshairEnabled = false;
