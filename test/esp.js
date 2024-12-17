@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         XcloudCheat (ESP and Auto shoot optimized with visual logs)
+// @name         XcloudCheat (ESP optimized with visual logs)
 // @namespace    http://tampermonkey.net/
-// @version      dev3
-// @description  ESP and Auto-shoot for Xcloud Gaming optimized with visual logs!
+// @version      dev4
+// @description  ESP for Xcloud Gaming with logs to debug!
 // @author       Ph0qu3_111
 // @match        https://www.xbox.com/*/play*
 // @grant        none
@@ -93,58 +93,19 @@
                 addLog(`Detected: ${prediction.className} with probability ${prediction.probability.toFixed(2)}`);
 
                 if (prediction.className === 'person') { // Target only "person"
-                    // Log the bounding box coordinates
-                    addLog(`Bounding Box: ${prediction.bbox.join(', ')}`);
+                    addLog(`Bounding Box: ${prediction.bbox ? prediction.bbox.join(', ') : 'N/A'}`);
 
-                    const [x, y, width, height] = prediction.bbox;
+                    const [x, y, width, height] = prediction.bbox || [0, 0, 0, 0];
 
                     // Draw ESP box around the enemy
                     ctx.strokeStyle = 'red';
                     ctx.lineWidth = 2;
                     ctx.strokeRect(x, y, width, height);
-
-                    // Auto-shoot if the enemy is centered
-                    if (isEnemyCentered(x, y, width, height)) {
-                        autoShoot();
-                    }
+                    addLog('ESP box drawn!');
                 }
             });
         }
         requestAnimationFrame(detectObjects); // Continue the detection loop
-    }
-
-    // Function to check if the enemy is centered in the crosshair
-    function isEnemyCentered(x, y, width, height) {
-        const centerX = x + width / 2;
-        const centerY = y + height / 2;
-        const crosshairX = window.innerWidth / 2;
-        const crosshairY = window.innerHeight / 2;
-
-        const tolerance = 30; // Tolerance for centering
-        const isCentered = Math.abs(centerX - crosshairX) < tolerance && Math.abs(centerY - crosshairY) < tolerance;
-
-        if (isCentered) {
-            addLog('Enemy is centered in crosshair');
-        }
-        return isCentered;
-    }
-
-    // Function to simulate a mouse click (auto-shoot)
-    function autoShoot() {
-        const event = new MouseEvent('mousedown', {
-            bubbles: true,
-            cancelable: true,
-            view: window
-        });
-        document.dispatchEvent(event);
-
-        const eventUp = new MouseEvent('mouseup', {
-            bubbles: true,
-            cancelable: true,
-            view: window
-        });
-        document.dispatchEvent(eventUp);
-        addLog("Auto-shoot triggered!");
     }
 
     // Start the object detection
