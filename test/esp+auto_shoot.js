@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         XcloudCheat (ESP and Auto shoot optimized with logs)
+// @name         XcloudCheat (ESP and Auto shoot optimized with visual logs)
 // @namespace    http://tampermonkey.net/
-// @version      dev2
-// @description  ESP and Auto-shoot for Xcloud Gaming optimized for performance!
+// @version      dev3
+// @description  ESP and Auto-shoot for Xcloud Gaming optimized with visual logs!
 // @author       Ph0qu3_111
 // @match        https://www.xbox.com/*/play*
 // @grant        none
@@ -38,6 +38,28 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
+    // Add a div for visual logs
+    const logDiv = document.createElement('div');
+    logDiv.style.position = 'fixed';
+    logDiv.style.top = '10px';
+    logDiv.style.left = '10px';
+    logDiv.style.color = 'white';
+    logDiv.style.fontSize = '16px';
+    logDiv.style.zIndex = '10001';
+    logDiv.style.maxWidth = '300px';
+    logDiv.style.whiteSpace = 'pre-wrap'; // To allow line breaks
+    logDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    logDiv.style.padding = '10px';
+    document.body.appendChild(logDiv);
+
+    let logs = ""; // To accumulate log messages
+
+    // Function to add logs to the visual log div
+    function addLog(message) {
+        logs += message + '\n';
+        logDiv.textContent = logs;
+    }
+
     // Function to perform object detection
     let lastDetectionTime = 0;  // To limit the frequency of detection
     async function detectObjects() {
@@ -62,17 +84,17 @@
             const predictions = await model.classify(canvasVideo);
 
             // Log predictions for debugging
-            console.log('Predictions:', predictions);
+            addLog('Predictions:');
 
             // Clear previous drawings
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             predictions.forEach(prediction => {
-                console.log(`Detected: ${prediction.className} with probability ${prediction.probability}`);
+                addLog(`Detected: ${prediction.className} with probability ${prediction.probability.toFixed(2)}`);
 
                 if (prediction.className === 'person') { // Target only "person"
                     // Log the bounding box coordinates
-                    console.log(`Bounding Box: ${prediction.bbox}`);
+                    addLog(`Bounding Box: ${prediction.bbox.join(', ')}`);
 
                     const [x, y, width, height] = prediction.bbox;
 
@@ -102,7 +124,7 @@
         const isCentered = Math.abs(centerX - crosshairX) < tolerance && Math.abs(centerY - crosshairY) < tolerance;
 
         if (isCentered) {
-            console.log('Enemy is centered in crosshair');
+            addLog('Enemy is centered in crosshair');
         }
         return isCentered;
     }
@@ -122,7 +144,7 @@
             view: window
         });
         document.dispatchEvent(eventUp);
-        console.log("Auto-shoot triggered!");
+        addLog("Auto-shoot triggered!");
     }
 
     // Start the object detection
