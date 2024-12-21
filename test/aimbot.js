@@ -1,12 +1,13 @@
 // ==UserScript==
-// @name         Fortnite Adaptive Silent Aim v33.9
+// @name         XcloudCheat (AI AIMBOT)
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  Silent Aim with adaptive AI, customizable crosshair, sliders, and buttons for better control. ESP excluded for undetectability.
+// @version      dev-1.0
+// @description  Aimbot
 // @author       Ph0qu3_111
 // @match        https://www.xbox.com/*/play*
 // @match        https://www.xbox.com/*/auth/msa?*loggedIn*
 // @grant        none
+// @run-at       document-end
 // ==/UserScript==
 
 (function () {
